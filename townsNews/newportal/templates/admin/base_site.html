@@ -1,0 +1,20 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}Панель керування{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name"><a href="{% url 'admin:index' %}">Адмін панель</a></h1>
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/admin_custom.css' %}">
+    <script src="{% static 'js/../../static/css/../../static/js/admin_custom.js' %}"></script>
+    <script src="{% static 'js/dist/bundle.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div id="react-root"></div>
+    {{ block.super }}
+{% endblock %}

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaScriptLibraryMappings">
+    <file url="file://$PROJECT_DIR$" libraries="{TagCloud, bootstrap, font-awesome, fullcalendar, jquery, jquery-3.6.0, jquery-3.6.4, jquery-3.7.1, qunit-2.19.1, qunit-2.19.4, sinon.js, tagcanvas, three, three.js, troika-three-text, troika-worker-utils}" />
+  </component>
+</project>

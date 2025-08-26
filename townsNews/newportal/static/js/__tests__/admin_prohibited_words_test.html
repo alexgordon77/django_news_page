@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>JS Unit Test</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.19.1.css">
+</head>
+<body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture">
+        <!-- Поле пошуку -->
+        <div class="mb-4">
+            <input type="text" id="search-word" class="form-control" placeholder="Введіть слово">
+            <button id="add-word-button" class="btn btn-success mt-2">Додати слово</button>
+        </div>
+
+        <!-- Список заборонених слів -->
+        <div id="prohibited-words-container">
+            <h5>Список заборонених слів:</h5>
+            <ol id="prohibited-words-list"></ol>
+        </div>
+
+        <!-- Таблиця статей -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Назва статті</th>
+                    <th>Слова</th>
+                </tr>
+            </thead>
+            <tbody id="articles-table-body">
+            </tbody>
+        </table>
+
+        <!-- CSRF-токен (імітація) -->
+        <input type="hidden" id="prohibited-words-url" data-url="/fake-url/">
+        <script>
+            document.cookie = "csrftoken=test_csrf_token";
+        </script>
+    </div>
+
+    <!-- Завантаження бібліотек у правильному порядку -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/qunit/qunit-2.19.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sinon.js/14.0.1/sinon.min.js"></script>
+
+    <!-- Основний JS-код -->
+    <script src="../prohibited_words_report.js"></script>
+
+    <!-- Файл з тестами -->
+    <script src="admin_prohibited_words_test.js"></script>
+</body>
+</html>

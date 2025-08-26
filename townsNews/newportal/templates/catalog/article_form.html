@@ -1,0 +1,95 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+{% block title %}{{ is_editing|yesno:"Редагування статті,Нова стаття" }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-3 main-block">
+    <div class="row justify-content-center first-block">
+        <div class="col-lg-12">
+            <div class="card shadow-sm border-0 block-form">
+                <div class="card-header bg-primary text-white rounded-top">
+                    <h2 class="text-center my-2">
+                        {{ is_editing|yesno:"Редагувати статтю,Створити статтю" }}
+                    </h2>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Титул статті -->
+                        <div class="mb-3">
+                            <label for="id_title" class="form-label">Заголовок статті</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="id_title"
+                                   name="title"
+                                   placeholder="Введіть заголовок"
+                                   value="{{ form.instance.title|default_if_none:'' }}" style="color: white">
+                        </div>
+
+                        <!-- Текст статті -->
+                        <div class="mb-3">
+                            <label for="id_article_text" class="form-label">Текст статті</label>
+                            <textarea class="form-control"
+                                      id="id_article_text"
+                                      name="article_text"
+                                      rows="6"
+                                      style="color: white"
+                                      placeholder="Введіть текст статті">{{ form.instance.article_text|default_if_none:'' }}</textarea>
+                        </div>
+
+                        <!-- Автор -->
+                        <div class="mb-3">
+                            <label for="id_author" class="form-label">Автор</label>
+                            {% if form.fields.author.choices %}
+                                <select class="form-control" id="id_author" name="author" style="color: white">
+                                    {% for val, label in form.fields.author.choices %}
+                                        <option value="{{ val }}"
+                                            {% if form.instance.author and form.instance.author.pk == val %}selected{% endif %}
+                                        style="color: black">{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            {% else %}
+                                <input type="text" class="form-control" id="id_author" name="author"
+                                       value="{{ form.instance.author|default_if_none:'' }}">
+                            {% endif %}
+                        </div>
+
+                        <!-- Теги (ManyToMany, через ctrl+click) -->
+                        <div class="mb-3">
+                            <label for="id_tags" class="form-label">Теги</label>
+                            <select class="form-control" id="id_tags" name="tags" style="color: white">
+                                <option value="" {% if not form.instance.tags.all %}selected{% endif %} style="color: black">Оберіть тег</option>
+                                {% for tag in form.fields.tags.queryset %}
+                                    <option value="{{ tag.pk }}"
+                                        {% if tag in form.instance.tags.all %}selected{% endif %}
+                                    style="color: black">{{ tag.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Дата публікації -->
+                        <div class="mb-3">
+                            <label for="id_date_of_publication" class="form-label">Дата публікації</label>
+                            <input type="date"
+                                   style="color: white"
+                                   class="form-control"
+                                   id="id_date_of_publication"
+                                   name="date_of_publication"
+                                   value="{{ form.instance.date_of_publication|date:'Y-m-d' }}">
+                        </div>
+
+                        <!-- Кнопки -->
+                        <div class="d-flex justify-content-between mt-3">
+                            <button type="submit" class="btn btn-success btn-lg px-4">Зберегти</button>
+                            <a href="{% url 'article-list' %}" class="btn btn-secondary btn-lg px-4">Скасувати</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

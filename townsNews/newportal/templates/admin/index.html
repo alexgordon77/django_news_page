@@ -1,0 +1,89 @@
+{% extends "admin/base_site.html" %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/admin_custom.css' %}">
+<link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.19.4.css">
+
+<script src="https://code.jquery.com/qunit/qunit-2.19.4.js"></script>
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Привітання -->
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-5 text-center text-md-start mb-4">
+                Ласкаво просимо, {{ request.user.get_full_name|default:request.user.username }}
+            </h1>
+            <p class="lead text-center text-md-start">
+                Використовуйте панель навігації для роботи з контентом та керування вашим сайтом.
+            </p>
+        </div>
+    </div>
+
+    <!-- Контент -->
+    <div class="row g-4 content-layout">
+        <!-- Швидкий доступ -->
+        <div class="col-lg-6 quick-access">
+            <div class="card shadow h-100">
+                <div class="card-body">
+                    <h4 class="card-title"><i class="fa-solid fa-tools"></i> Швидкий доступ</h4>
+                    <div class="row g-2 text-center">
+                        <div class="col-4">
+                            <a href="{% url 'admin:newportal_article_changelist' %}" class="btn btn-outline-primary w-100 py-3">
+                                <i class="fa-solid fa-newspaper fa-2x"></i><br>Статті
+                            </a>
+                        </div>
+                        <div class="col-4">
+                            <a href="{% url 'admin:newportal_comment_changelist' %}" class="btn btn-outline-success w-100 py-3">
+                                <i class="fa-solid fa-comment fa-2x"></i><br>Коментарі
+                            </a>
+                        </div>
+                        <div class="col-4">
+                            <a href="/admin/newportal/tag/" class="btn btn-outline-warning w-100 py-3"
+                            style="background-color: transparent;
+                                      color: #856404;
+                                      border-color: #e6c65e;
+                                      border-radius: 5px;
+                                      font-size: 1rem;
+                                      transition: all 0.3s ease;"
+                                   onmouseover="this.style.backgroundColor='#ffd966'; this.style.color='#fff'; this.style.borderColor='#ffd966';"
+                                   onmouseout="this.style.backgroundColor='transparent'; this.style.color='#856404'; this.style.borderColor='#e6c65e';">
+                                <i class="fa-solid fa-tag fa-2x"></i><br>Теги
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Останні дії -->
+        <div class="col-lg-6 recent-actions">
+            <div class="card shadow h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="card-title m-0"><i class="fa-solid fa-clock"></i> Останні дії</h4>
+                        <!-- Відображати кнопку тільки якщо є записи -->
+                        {% if recent_actions %}
+                        <a href="{% url 'admin:clear_log' %}" class="btn btn-danger">
+                            Очистити журнал дій
+                        </a>
+                        {% endif %}
+                    </div>
+                    <ul class="list-group list-group-flush" id="recent-actions">
+                        {% for action in recent_actions %}
+                        <li class="list-group-item">
+                            <strong>{{ action.action_time|date:"d M Y H:i" }}</strong> -
+                            Дія: {{ action.get_action_flag_display }} ---
+                            Об'єкт: {{ action.object_repr }} ---
+                            Опис: {{ action.formatted_change_message }}
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item">Немає нещодавніх дій.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

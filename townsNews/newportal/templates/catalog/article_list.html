@@ -1,0 +1,112 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+{% extends 'base_generic.html' %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+{% block content %}
+<div class="article-list-container">
+    <button class="search-button" id="toggle-search-btn" type="button" title="Пошук">
+        <i class="fa fa-search"></i>
+    </button>
+
+    <h1>Всі новини</h1>
+
+    <!-- Контейнер для авторів -->
+    <div id="author-container" class="canvas-container"></div>
+
+    <!-- Контейнер для тегів -->
+    <div id="tag-container" class="canvas-container"></div>
+
+    <!-- Дані авторів та тегів для JS -->
+    <div id="author-data" data-authors='[
+        {% for author in authors %}
+            {"id": {{ author.id }}, "name": "{{ author.name }}"}{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ]'></div>
+
+    <div id="tag-data" data-tags='[
+        {% for tag in tags %}
+            {"id": {{ tag.id }}, "name": "{{ tag.name }}"}{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ]'></div>
+
+    <p>Ознайомтесь із останніми новинами, які ми публікуємо.</p>
+
+    <!-- Фільтри -->
+    <div class="filter-section">
+        <form method="get" class="form-inline">
+            <div class="form-group">
+                <label for="date">Дата:</label>
+                <input type="date" id="date" name="date" class="form-control" value="{{ request.GET.date }}" onchange="this.form.submit()">
+            </div>
+            <div class="form-group">
+                <label for="sort">Сортувати за:</label>
+                <select id="sort" name="sort" class="form-control" onchange="this.form.submit()">
+                    <option value="views" {% if request.GET.sort == "views" %}selected{% endif %}>Переглядами</option>
+                    <option value="comments" {% if request.GET.sort == "comments" %}selected{% endif %}>Коментарями</option>
+                    <option value="saves" {% if request.GET.sort == "saves" %}selected{% endif %}>Збереженнями</option>
+                </select>
+            </div>
+        </form>
+    </div>
+
+    <!-- Пошук -->
+    <div class="search-section" id="search-section" style="display: none;">
+        <form method="get" class="form-inline mb-3 search-form">
+            <div class="form-group search-field">
+                <label for="search" class="mr-2">Пошук новини: </label>
+                <input id="search" type="text" name="query" class="form-control" placeholder="Пошук..." value="{{ request.GET.query }}">
+                <button type="submit" class="btn search-btn">Шукати</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Список статей -->
+    <div class="article-list">
+        {% for article in articles %}
+        <div class="article-item">
+            {% if article.image %}
+            <img src="{{ article.image.url }}" alt="{{ article.title }}" class="article-image">
+            {% endif %}
+            <h3><a href="{% url 'article-detail' article.pk %}">{{ article.title }}</a></h3>
+            <p class="meta">
+                Автор: {{ article.author.name }} | Дата: {{ article.date_of_publication|date:"d.m.Y" }}
+                | Перегляди: {{ article.views_count }}
+                | Коментарі: {{ article.num_comments }}
+                | Збереження: {{ article.num_saves }}
+            </p>
+            <p>{{ article.article_text|truncatewords:30 }}</p>
+            <a href="{% url 'article-detail' article.pk %}" class="btn read-more-btn">Читати далі</a>
+        </div>
+        {% empty %}
+        <p>Новин не знайдено.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Пагінація -->
+    {% if is_paginated %}
+    <nav class="pagination-container">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li><a href="?page={{ page_obj.previous_page_number }}">&laquo; Попередня</a></li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+            <li class="{% if page_obj.number == num %}active{% endif %}">
+                <a href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li><a href="?page={{ page_obj.next_page_number }}">Наступна &raquo;</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<!-- Підключення скриптів -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/article_list.js' %}"></script>
+{% endblock %}

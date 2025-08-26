@@ -1,0 +1,104 @@
+{% extends 'base_generic.html' %}
+
+{% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+        {% if is_admin %}
+            <div class="btn-block">
+                <strong>Керування новиною</strong><br>
+                <a href="{% url 'edit-article' article.pk %}" class="btn btn-warning btn-sm edit-btn">Редагувати</a>
+                <form action="{% url 'delete-article' article.pk %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Видалити</button>
+                </form>
+            </div>
+        {% endif %}
+<div class="container-detail mt-5">
+    <div class="row">
+        <!-- Контент статті -->
+        <div class="col-sm-8">
+            <h1 class="article-title mb-4" style="color: #ffcc00">{{ article.title }}</h1>
+            {% if article.image %}
+                <img src="{{ article.image.url }}" alt="{{ article.title }}" style="max-width: 70%; margin-bottom: 20px;">
+            {% endif %}
+            <p class="text-muted"><strong>Автор:</strong> {{ article.author.name }}</p>
+            <p class="text-muted"><strong>Опубліковано:</strong> {{ article.date_of_publication|date:"d M Y" }}</p>
+            <div class="article-content mb-4">{{ article.article_text|linebreaksbr }}</div>
+
+            <!-- Теги статті -->
+            <p><strong>Теги:</strong>
+                {% for tag in article.tags.all %}
+                    <a href="{% url 'article-list' %}?tag={{ tag.id }}" class="badge badge-info">{{ tag.name }}</a>
+                {% endfor %}
+            </p>
+
+            <!-- Зберегти статтю -->
+            {% if user.is_authenticated %}
+            <form action="{% url 'save-for-later' article.pk %}" method="post" class="mt-4">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-sm">Зберегти для подальшого читання</button>
+            </form>
+            {% endif %}
+
+            <!-- Коментарі -->
+            <hr>
+            <h3 class="mb-3">Коментарі</h3>
+            <ul class="list-unstyled">
+                {% for comment in article.comments.all %}
+                <li class="media mb-3">
+                    <div class="media-body">
+                        <h5 class="mt-0 mb-1">{{ comment.user.username }}</h5>
+                        {{ comment.text }}
+
+                        <!-- Показати кнопку видалення лише для адміністратора -->
+                        {% if is_admin %}
+                        <form action="{% url 'delete-comment' comment.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Видалити</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </li>
+                {% empty %}
+                <p>Поки що немає коментарів.</p>
+                {% endfor %}
+            </ul>
+
+            <!-- Додати коментар -->
+            {% if user.is_authenticated %}
+            <hr>
+            <h4 class="mb-3">Додати коментар</h4>
+            <form action="{% url 'article-detail' article.pk %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.text.label_tag }}
+                    {{ form.text }}
+                </div>
+                <button type="submit" class="btn btn-sm send-btn">Відправити</button>
+            </form>
+            {% else %}
+            <p>Будь ласка, <a href="{% url 'login' %}?next={{ request.path }}">увійдіть</a>, щоб залишити коментар.</p>
+            {% endif %}
+        </div>
+
+        <!-- Other news -->
+        <div class="col-sm-4">
+            <div class="another-news">
+                <h3><a href="{% url 'article-list' %}">До інших новин</a></h3>
+            </div>
+        </div>
+
+        <!-- Advertising -->
+        <div class="advertising">
+            <div class="advertising-content">
+                <span class="ad-title">Тут може бути ваша реклама</span>
+                <span class="ad-subtitle">Зв'яжіться з адміністрацією<br>для розміщення</span>
+                <span class="ad-contact"><a href="https://mail.google.com/">infokyivlux@gmail.com</a></span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

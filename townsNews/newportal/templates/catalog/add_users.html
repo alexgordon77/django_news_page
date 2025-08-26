@@ -1,0 +1,109 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-login">
+    <h2>Додати нового користувача</h2>
+
+    {% if form.errors %}
+    <ul class="form-errors alert alert-danger" style="list-style: none;">
+        {% for field in form %}
+            {% for error in field.errors %}
+            <li><strong>{{ field.label }}</strong>: {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form method="post" id="registration-form" novalidate>
+        {% csrf_token %}
+        <div class="form-reg">
+            {{ form.username.label_tag }}
+            {{ form.username }}
+        </div>
+        <div class="form-reg">
+            {{ form.email.label_tag }}
+            {{ form.email }}
+        </div>
+        <div class="form-reg">
+            {{ form.password.label_tag }}
+            {{ form.password }}
+            <ul id="password-checklist"
+                class="text-muted"
+                style="font-size:0.95em; margin-bottom:0; margin-top:4px; padding-left:18px;">
+                <li id="len-check">Мінімум 8 символів</li>
+                <li id="upper-check">Хоча б одна велика літера</li>
+                <li id="spec-check">Хоча б один спецсимвол (!@#$%^&*)</li>
+            </ul>
+        </div>
+        <div class="form-reg">
+            {{ form.password_confirm.label_tag }}
+            {{ form.password_confirm }}
+            <span id="match-check"
+                  class="text-muted"
+                  style="font-size:0.95em; display:block;"></span>
+        </div>
+        <button class="sub-btn btn btn-primary" id="submit-btn">Створити користувача</button>
+    </form>
+
+    <p style="margin-top:1em;">
+        <a href="{% url 'user-management' %}">&larr; Повернутись до списку користувачів</a>
+    </p>
+</div>
+
+<script>
+// Блокуємо copy/paste у полях password
+(function() {
+    const passFields = document.querySelectorAll('input[type="password"]');
+    passFields.forEach(field => {
+        field.setAttribute('autocomplete', 'new-password');
+        ['copy','paste','cut','contextmenu'].forEach(ev =>
+            field.addEventListener(ev, e => e.preventDefault())
+        );
+    });
+})();
+
+// Live-валидація паролю
+(function() {
+    const pwd = document.getElementById("id_password");
+    const conf = document.getElementById("id_password_confirm");
+    const btn = document.getElementById("submit-btn");
+    const len = document.getElementById("len-check");
+    const up  = document.getElementById("upper-check");
+    const spc = document.getElementById("spec-check");
+    const mch = document.getElementById("match-check");
+
+    function validatePassword() {
+        const v = pwd.value;
+        let ok = true;
+        // довжина
+        if (v.length >= 8) { len.style.color = "green"; }
+        else { len.style.color = "red"; ok = false; }
+        // велика літера
+        if (/[A-ZА-ЯЁЇЄІ]/.test(v)) { up.style.color = "green"; }
+        else { up.style.color = "red"; ok = false; }
+        // спецсимвол
+        if (/[!@#$%^&*]/.test(v)) { spc.style.color = "green"; }
+        else { spc.style.color = "red"; ok = false; }
+
+        // збіг
+        if (!conf.value) {
+            mch.textContent = ""; ok = false;
+        } else if (v === conf.value) {
+            mch.textContent = "Паролі співпадають"; mch.style.color = "green";
+        } else {
+            mch.textContent = "Паролі не співпадають"; mch.style.color = "red";
+            ok = false;
+        }
+
+        btn.disabled = !ok;
+    }
+
+    [pwd, conf].forEach(fld => fld.addEventListener("input", validatePassword));
+    document.addEventListener("DOMContentLoaded", ()=> btn.disabled = true);
+})();
+</script>
+{% endblock %}

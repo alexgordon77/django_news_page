@@ -1,0 +1,38 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+{% block content %}
+<div class="container-login">
+    <h2>Вхід в профіль</h2>
+
+    <!-- Виведення повідомлень про помилки -->
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        {% if form.non_field_errors %}
+            <p>{{ form.non_field_errors }}</p>
+        {% endif %}
+        {% for field in form %}
+            {% if field.errors %}
+                <p><strong>{{ field.label }}:</strong> {{ field.errors.0 }}</p>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-reg">
+            <label for="id_username">Ім'я користувача:</label>
+            {{ form.username }}
+        </div>
+        <div class="form-reg">
+            <label for="id_password">Пароль:</label>
+            {{ form.password }}
+        </div>
+        <button class="sub-btn">Вхід</button>
+    </form>
+
+    <a class="aaa" href="{% url 'register' %}">Реєстрація</a>
+</div>
+{% endblock %}

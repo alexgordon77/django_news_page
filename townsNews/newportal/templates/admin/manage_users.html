@@ -1,0 +1,68 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+<h2>Керування користувачами</h2>
+
+<h3>Додати користувача</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Додати користувача</button>
+</form>
+
+<hr>
+
+<h3>Список користувачів</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ім'я користувача</th>
+            <th>Email</th>
+            <th>Дії</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+                <!-- Бан користувача -->
+                <form method="post" action="{% url 'ban_user' user.id 'day' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning">Бан на день</button>
+                </form>
+
+                <form method="post" action="{% url 'ban_user' user.id 'week' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning">Бан на тиждень</button>
+                </form>
+
+                <form method="post" action="{% url 'ban_user' user.id 'month' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning">Бан на місяць</button>
+                </form>
+
+                <form method="post" action="{% url 'ban_user' user.id 'forever' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Бан назавжди</button>
+                </form>
+
+                <!-- Розбан користувача -->
+                <button class="btn btn-default unban-user" data-id="{{ user.id }}">Розбанити</button>
+
+                <!-- Видалення користувача -->
+                <a href="{% url 'delete-user' user.id %}" class="btn btn-danger">Видалити</a>
+            </td>
+            <td>
+                {% if user.userprofile.is_banned %}
+                    <span class="text-danger">Забанено (залишилось: {{ user.userprofile.time_until_unban.days }} днів, {{ user.userprofile.time_until_unban.seconds|divisibleby:3600 }} годин)</span>
+                {% else %}
+                    <span class="text-success">Активний</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

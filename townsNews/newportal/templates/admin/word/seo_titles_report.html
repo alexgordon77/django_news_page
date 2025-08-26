@@ -1,0 +1,20 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/admin_custom.css' %}">
+
+<h2>Перевірка заголовків на відповідність SEO</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Назва статті</th>
+            <th>SEO відповідність</th>
+        </tr>
+    </thead>
+    {% for article in seo_data %}
+    <tr>
+        <td>
+            <a class="article-link" href="/admin/newportal/article/{{ article.id }}/change/">{{ article.title }}</a>
+        </td>
+        <td>{{ article.seo_check }}</td>
+    </tr>
+    {% endfor %}
+</table>

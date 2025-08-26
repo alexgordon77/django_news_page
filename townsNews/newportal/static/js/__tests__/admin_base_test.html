@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JS Unit Test</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.19.1.css">
+</head>
+<body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture">
+        <!-- Фікстура: створення тестового середовища -->
+        <div id="sidebar-toggle-container">
+            <button id="sidebar-toggle" class="btn">
+                <i class="fa-solid fa-bars"></i> Закрити
+            </button>
+        </div>
+        <div id="sidebar" class="theme-light"></div>
+
+        <button id="theme-toggle" class="btn btn-outline-light">
+            <i class="fa-solid fa-moon"></i> <span id="theme-label">Темна тема</span>
+        </button>
+
+        <nav class="nav flex-column">
+            <a href="#" class="nav-link sidebar-link" data-url="/admin/newportal/article/">Статті</a>
+        </nav>
+
+        <main class="container-fluid"></main>
+
+        <form id="logout-form" method="post" action="/admin/logout/">
+            <button type="submit" id="logout-button">Вийти</button>
+        </form>
+    </div>
+
+    <!-- Завантаження бібліотек -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://code.jquery.com/qunit/qunit-2.19.1.js"></script>
+    <script src="../admin_custom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sinon.js/14.0.1/sinon.min.js"></script>
+
+    <!-- Файл тестів -->
+    <script src="admin_base_test.js"></script>
+</body>
+</html>

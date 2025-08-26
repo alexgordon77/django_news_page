@@ -1,0 +1,14 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/admin_custom.css' %}">
+
+<h1>Список помилок</h1>
+{% if errors %}
+    <ul>
+        {% for error in errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Немає помилок</p>
+{% endif %}
+<p>{{ developer_message }}</p>

@@ -1,0 +1,26 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/admin_custom.css' %}">
+
+<h2>Оновлення</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Стаття</th>
+            <th>Час</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for update in updates %}
+        <tr>
+            <td>
+                <a class="article-link" href="/admin/newportal/article/{{ update.id }}/change/">{{ update.message }}</a>
+            </td>
+            <td>{{ update.timestamp }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">Немає оновлень</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

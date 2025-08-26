@@ -1,0 +1,31 @@
+{% extends "admin/change_form.html" %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/admin_custom.css' %}">
+
+{% block content %}
+<div>
+    <h2 class="text-center mb-4">Оберіть звіт:</h2>
+    <div class="d-flex justify-content-center mb-3">
+        {% if reports %}
+        <select id="report-dropdown" class="form-select w-50">
+            <option value="">-- Виберіть звіт --</option>
+            {% for name, url in reports.items %}
+            <option value="{{ url }}" {% if selected_report == url %}selected{% endif %}>
+                {{ name }}
+            </option>
+            {% endfor %}
+        </select>
+        {% else %}
+        <p class="text-warning">Немає доступних звітів для вибору.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div id="report-content" class="report-container shadow-sm">
+    <h3 class="text-center">Результати звіту з’являться тут</h3>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/change_form.js' %}"></script>
+{% endblock %}

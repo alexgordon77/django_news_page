@@ -1,0 +1,18 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/admin_custom.css' %}">
+
+<h2>Популярні статті за переглядами</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Назва статті</th>
+            <th>Кількість переглядів</th>
+        </tr>
+    </thead>
+    {% for title, views in sorted_article_views %}
+    <tr>
+        <td><a class="article-link" href="/admin/newportal/article/{{ id }}/change/">{{ title }}</a></td>
+        <td>{{ views }}</td>
+    </tr>
+    {% endfor %}
+</table>

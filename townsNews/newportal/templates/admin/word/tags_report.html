@@ -1,0 +1,18 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/admin_custom.css' %}">
+
+<h2>Теги в статтях</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Назва статті</th>
+            <th>Теги</th>
+        </tr>
+    </thead>
+    {% for data in tags_data %}
+    <tr>
+        <td><a class="article-link" href="/admin/newportal/article/{{ data.id }}/change/">{{ data.title }}</a></td>
+        <td>{{ data.tags }}</td>
+    </tr>
+    {% endfor %}
+</table>

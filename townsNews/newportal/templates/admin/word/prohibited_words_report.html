@@ -1,0 +1,58 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/admin_custom.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+<h2>Заборонені слова в статтях</h2>
+
+<!-- Поле пошуку -->
+<div class="mb-4">
+    <input type="text" id="search-word" name="new_word" class="form-control" placeholder="Введіть слово або словосполучення">
+    <button id="add-word-button" class="btn btn-success mt-2">Додати слово</button>
+</div>
+
+<!-- Список заборонених слів -->
+<div id="prohibited-words-container" class="mb-4">
+    <h5>Список заборонених слів:</h5>
+    <ol id="prohibited-words-list">
+        {% for word in prohibited_words %}
+            <li class="word-item">
+                <span class="word-text">{{ word }}</span>
+                <button class="delete-word-button" data-word="{{ word }}" data-url="{% url 'prohibited_words_report' %}">
+                    <i class="fa fa-x"></i>
+                </button>
+            </li>
+        {% empty %}
+            Список порожній
+        {% endfor %}
+    </ol>
+</div>
+
+<!-- Таблиця статей -->
+<table>
+    <thead>
+        <tr>
+            <th>Назва статті</th>
+            <th>Слова</th>
+        </tr>
+    </thead>
+    <tbody id="articles-table-body">
+        {% for data in prohibited_words_data %}
+            <tr>
+                <td>
+                    <a class="article-link" href="/admin/newportal/article/{{ data.id }}/change/">{{ data.title }}</a>
+                </td>
+                <td>{{ data.words }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="2" class="text-center">Заборонених слів не виявлено</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<input type="hidden" id="prohibited-words-url" data-url="{% url 'prohibited_words_report' %}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/admin_custom.js' %}" defer></script>
+<script src="{% static 'js/prohibited_words_report.js' %}"></script>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Портал Новин Міста Київ{% endblock %}</title>
+
+    <!-- Підключення стилів Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.19.4.css">
+
+    <!-- Підключення jQuery та Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/qunit/qunit-2.19.4.js"></script>
+
+    <!-- Підключення власних стилів -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+        <style>
+            body {
+               background-color: {{ site_settings.background_color|default:"#002f31" }} !important;
+               color: {{ site_settings.font_color|default:"#ffffff" }} !important;
+               font-size: {{ site_settings.font_size|default:"14px" }} !important;
+            }
+        </style>
+
+</head>
+<body>
+<div class="notify_user">
+    {% if message %}
+        <div class="alert">
+            {% for message in messages %}
+                <div class="alert alert-info alert-dismissable fade show">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+<div class="head-of-page">
+    <div class="container-base">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="head-content">
+                    <!-- Ліва частина: логотип + текст -->
+                    <div class="logo-title-row">
+                        <div class="k-block">
+                            <h1>K</h1>
+                        </div>
+                        <h2 class="kyiv-lux">
+                            <a href="{% url 'index' %}" style="color: white; text-decoration: none">КИЇВ ЛЮКС</a>
+                        </h2>
+                    </div>
+                    <!-- Права частина: меню, погода, юзер -->
+                    <div class="header-controls">
+                        <div class="variant-block">
+                            <a href="{% url 'index' %}">Головна сторінка</a>
+                            <a href="{% url 'article-list' %}">Всі новини</a>
+                            {% if user.is_authenticated %}
+                                <button id="menuBtn" class="btn-menu">Меню &#9660</button>
+                            {% endif %}
+                            <div class="api-news" id="weather-block"></div>
+                        </div>
+                        <div class="head-user-info">
+                            {% if user.is_authenticated %}
+                                <span id="username">Користувач: <strong>{{ user.get_username }}</strong></span>
+                                <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button id="logBtn" type="submit" class="btn btn-custom">Logout</button>
+                                </form>
+                            {% else %}
+                                <form method="post" action="{% url 'login' %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button id="logBtn" type="submit" class="btn btn-custom">Login</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <!-- Окремий мобільний блок навігації -->
+                <nav class="main-nav-mobile">
+                    <a href="{% url 'index' %}">Головна сторінка</a>
+                    <a href="{% url 'article-list' %}">Всі новини</a>
+                    {% if user.is_authenticated %}
+                        <button id="menuBtnMobile" class="btn-menu" type="button">Меню &#9660;</button>
+                    {% endif %}
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-sm-2">
+            <ul id="sidebar" class="nav nav-pills nav-stacked sidebar">
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'saved-articles' %}">Збережені новини</a></li>
+                {% endif %}
+                    <li><a href="{% url 'edit-profile' %}">Редагування профілю</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'edit-user-site-settings' %}">Налаштування сторінки</a></li>
+                {% endif %}
+                {% if is_admin %}
+                    <li><a href="{% url 'user-management' %}">Управління користувачами</a></li>
+                {% endif %}
+                {% if is_admin %}
+                    <li><a href="{% url 'article-statistics' %}">Рейтинг статей</a></li>
+                {% endif %}
+                {% if is_admin %}
+                    <li><a href="{% url 'admin:index' %}">Адмін панель</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- Основний контент -->
+        <div class="col-sm-10">
+            {% block content %}{% endblock %}
+
+            <!-- Пагінація -->
+            {% block pagination %}
+            {% if is_paginated %}
+                <div class="pagination">
+                    <span class="page-links">
+                        {% if page_obj.has_previous %}
+                        <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">Попередня</a>
+                        {% endif %}
+                    </span>
+                    <span class="page-current">
+                        Сторінка {{ page_obj.number }} з {{ page_obj.paginator.num_pages }}
+                    </span>
+                    <span class="page-links">
+                        {% if page_obj.has_next %}
+                        <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">Наступна</a>
+                        {% endif %}
+                    </span>
+                </div>
+            {% endif %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+{% block footer %}
+<footer>
+    {% block copyright %}
+        <div>
+            <ul>
+                <li class="footer-header">Підтримка</li>
+                <li><a href="{% url 'how-listen' %}">Як слухати</a></li>
+                <li><a href="https://apps.apple.com/ru/developer/apple/id284417353?mt=12">Мобільний додаток</a></li>
+                <li><a href="https://workspace.google.com/intl/uk/gmail/">Поштова розсилка</a></li>
+                <li><a href="https://www.ukraine.com.ua/blog/marketing/chto-takoe-rss-i-kak-ego-ispolzovat.html">RSS</a></li>
+                <li><a href="{% url 'comment-rules' %}">Правила коментування</a></li>
+            </ul>
+            <ul>
+                <li class="footer-header">Інформація</li>
+                <li><a href="{% url 'about-us' %}">Про нас</a></li>
+                <li><a href="{% url 'our-codex' %}">Наш кодекс</a></li>
+                <li><a href="{% url 'legal-aspects' %}">Правові аспекти</a></li>
+                <li><a href="https://jobs.dou.ua/vacancies/?category=Python">Вакансії</a></li>
+                <li><a href="{% url 'feedback' %}">Зворотний зв'язок</a></li>
+            </ul>
+            <ul>
+                <li class="footer-header">Долучайся!</li>
+                <li>
+                    <div class="block-png">
+                        <a href="https://www.facebook.com/watch/?ref=tab"><img src="{% static 'images/free-icon-facebook-1077041.png' %}" alt="1"></a>
+                        <a href="https://workspace.google.com/intl/uk/gmail/"><img src="{% static 'images/free-icon-gmail-logo-60543.png' %}" alt="2"></a>
+                        <a href="https://www.instagram.com/"><img src="{% static 'images/free-icon-instagram-717392.png' %}" alt="3"></a>
+                        <a href="https://x.com/?lang=ru&mx=2"><img src="{% static 'images/social-media.png' %}" alt="4"></a>
+                        <a href="https://desktop.telegram.org/"><img src="{% static 'images/free-icon-telegram-logo-87413.png' %}" alt="5"></a>
+                        <a href="https://www.whatsapp.com/?lang=ru_RU"><img src="{% static 'images/free-icon-whatsapp-1384023.png'%}" alt="6"></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <p>&copy; ТОВ "Портал Новин Київ", 2025. Всі права захищено.</p>
+    {% endblock %}
+</footer>
+
+{% endblock %}
+
+<script src="{% static 'js/base_generic.js' %}"></script>
+</body>
+</html>

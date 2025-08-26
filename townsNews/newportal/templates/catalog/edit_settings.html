@@ -1,0 +1,36 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.19.4.css">
+
+<script src="https://code.jquery.com/qunit/qunit-2.19.4.js"></script>
+
+{% block content %}
+<div class="container-edit mt-5 setting-form">
+    <div class="settings-container card shadow p-4">
+        <h2 class="text-center mb-4">Налаштування сайту</h2>
+        <form method="post" class="settings-form text-left">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_font_color">Колір шрифту:</label>
+                {{ form.font_color }}
+            </div>
+            <div class="form-group">
+                <label for="id_background_color">Колір фону:</label>
+                {{ form.background_color }}
+            </div>
+            <div class="form-group">
+                <label for="id_font_size">Розмір шрифту:</label>
+                <input type="range" id="id_font_size" name="font_size" min="12" max="36" step="1" value="{{ form.font_size.value }}">
+                <span id="font-size-display">{{ form.font_size.value }} px</span>
+            </div>
+            <div class="text-center mt-4">
+                <button type="submit" class="btn">Зберегти</button>
+                <button type="submit" name="reset_defaults" value="1" class="btn">Скинути до стандартних</button>
+            </div>
+        </form>
+    </div>
+</div>
+    <script src="{% static 'js/edit_settings.js' %}"></script>
+{% endblock %}
+

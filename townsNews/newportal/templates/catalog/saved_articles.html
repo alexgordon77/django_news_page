@@ -1,0 +1,56 @@
+{% extends 'base_generic.html' %}
+
+{% load static %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+
+{% block title %}Збережені статті{% endblock %}
+
+{% block content %}
+<div class="container-saved">
+    <h1 class="text-center mb-4">Збережені статті</h1>
+    {% if saved_articles %}
+    <ul class="list-group">
+        {% for saved_article in saved_articles %}
+        <li class="list-group-item d-flex justify-content-between align-items-center"
+        data-url="{% url 'article-detail' saved_article.article.pk %}">
+            <div>
+                <a href="{% url 'article-detail' saved_article.article.pk %}" class="article-link">{{ saved_article.article.title }}</a>
+                <p class="mb-1"><strong>Автор:</strong> {{ saved_article.article.author.name }}</p>
+                <p class="mb-1"><strong>Опубліковано:</strong> {{ saved_article.article.date_of_publication|date:"d M Y" }}</p>
+            </div>
+            <div class="text-center">
+                <form action="{% url 'remove-from-saved' saved_article.article.pk %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Видалити</button>
+                </form>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="text-center">У вас немає збережених статей.</p>
+    {% endif %}
+</div>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('li.list-group-item[data-url]').forEach(function(item) {
+        item.addEventListener('click', function(e) {
+            // Якщо клікнули по <a> або по кнопці у формі — не переходити!
+            if (
+                e.target.tagName.toLowerCase() === 'a' ||
+                e.target.tagName.toLowerCase() === 'button' ||
+                e.target.closest('form')
+            ) {
+                return;
+            }
+            const url = this.getAttribute('data-url');
+            if (url) {
+                window.location.href = url;
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

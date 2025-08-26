@@ -1,0 +1,12 @@
+{% extends 'base_generic.html' %}
+
+{% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+{% block content %}
+<h1 id="how-listen">Зворотній зв'язок</h1>
+    <div class="listen-block">
+        Якщо хочете щоб ми зв'язались з вами - залиште нам вашу електрону пошту або номер телефону
+        <input type="text" id="search-word" class="form-control" style="width: 30%; margin-top: 2%" placeholder="Введіть пошту або номер">
+    </div>
+{% endblock %}

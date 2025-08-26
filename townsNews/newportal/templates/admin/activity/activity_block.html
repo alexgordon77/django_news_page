@@ -1,0 +1,18 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/admin_custom.css' %}">
+
+<h2 class="two">Найбільш переглядані блоки новин</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Блок новин</th>
+            <th>Кількість переглядів</th>
+        </tr>
+    </thead>
+    {% for block, views in sorted_block_views %}
+    <tr>
+        <td>{{ block }}</td>
+        <td>{{ views }}</td>
+    </tr>
+    {% endfor %}
+</table>

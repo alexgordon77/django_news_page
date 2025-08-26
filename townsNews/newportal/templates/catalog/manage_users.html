@@ -1,0 +1,64 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+{% block content %}
+<h2 class="head-user">Управління користувачами</h2>
+
+<!-- Кнопка для перенаправлення на сторінку додавання нового користувача -->
+<a href="{% url 'add-user' %}" class="btn mb-3 add-user-btn">Додати користувача</a>
+
+<!-- Список користувачів -->
+<table class="table table-bordered mt-4 table-user">
+    <thead>
+    <tr>
+        <th class="th-table">ID</th>
+        <th class="th-table">Ім'я користувача</th>
+        <th class="th-table">Email</th>
+        <th class="th-table">Термін блокування(до)</th>  <!-- Додаємо новий стовпчик -->
+        <th class="th-table btn-col">Дії</th>
+    </tr>
+</thead>
+<tbody>
+    {% for user in users %}
+    <tr class="tr-table">
+        <td class="td-table">{{ user.id }}</td>
+        <td class="td-table">{{ user.username }}</td>
+        <td class="td-table">{{ user.email }}</td>
+        <td class="td-table">
+            {% if user.userban.is_banned %}
+                {{ user.userban.ban_end|date:"d M Y H:i" }}
+            {% else %}
+                <span>-</span>
+            {% endif %}
+        </td>
+       <td class="btn-td">
+            <div class="action-buttons">
+                <form method="post" style="display:inline-flex; align-items:center;">
+                    {% csrf_token %}
+                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                    {% if user.userban and user.userban.is_banned %}
+                        <button type="submit" name="unban_user" class="btn-users btn-success">Розблокувати</button>
+                    {% else %}
+                        <select name="period" class="form-control" style="width: 120px; margin-right: 8px;">
+                            <option value="1">1 день</option>
+                            <option value="7">7 днів</option>
+                            <option value="30">30 днів</option>
+                            <option value="365">1 рік</option>
+                            <option value="99999">Довічно</option>
+                        </select>
+                        <button type="submit" name="ban_user" class="btn-users btn-warning">Бан</button>
+                    {% endif %}
+                </form>
+                <form method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                    <button type="submit" name="delete_user" class="btn-users btn-danger">Видалити</button>
+                </form>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+{% endblock %}

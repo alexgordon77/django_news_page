@@ -1,0 +1,56 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+<div class="container mt-5 rat-container" style="background-color: #022926">
+  <h1 class="text-center mb-5 stat-header" style="color: #ffcc00">
+    Статистика статей
+  </h1>
+
+  <div class="row justify-content-center rat-table">
+    <div class="col-lg-10">
+      <table class="table table-bordered table-stat">
+        <thead class="thead-dark">
+          <tr>
+            <th>Назва статті</th>
+
+            <th>
+              <a href="?sort=views" style="color: white; text-decoration: none">
+                Перегляди
+                {% if current_sort == 'views' %}{% endif %}
+              </a>
+            </th>
+
+            <th>
+              <a href="?sort=comments" style="color: white; text-decoration: none">
+                Коментарі
+                {% if current_sort == 'comments' %}{% endif %}
+              </a>
+            </th>
+
+            <th>
+              <a href="?sort=saves" style="color: white; text-decoration: none">
+                Збереження
+                {% if current_sort == 'saves' %}{% endif %}
+              </a>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for article in articles %}
+          <tr>
+            <td class="td-title">{{ article.title }}</td>
+            <td class="count-rating">{{ article.views_count }}</td>
+            <td class="count-rating">{{ article.num_comments }}</td>
+            <td class="count-rating">{{ article.num_saves }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4" class="text-center">Немає статей для відображення.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
