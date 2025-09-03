@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Тести index.html</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.19.4.css">
+</head>
+<body>
+
+<div id="qunit"></div>
+<div id="qunit-fixture">
+    <div class="container-fluid mt-4">
+        <div class="row g-4 content-layout">
+            <!-- Швидкий доступ -->
+            <div class="col-lg-6 quick-access">
+                <div class="card-body">
+                    <div class="row g-2 text-center">
+                        <div class="col-4">
+                            <a href="/admin/newportal/article/" class="btn btn-outline-primary w-100 py-3 quick-link">
+                                <i class="fa-solid fa-newspaper fa-2x"></i><br>Статті
+                            </a>
+                        </div>
+                        <div class="col-4">
+                            <a href="/admin/newportal/comment/" class="btn btn-outline-success w-100 py-3 quick-link">
+                                <i class="fa-solid fa-comment fa-2x"></i><br>Коментарі
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Останні дії -->
+            <div class="col-lg-6 recent-actions">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="card-title m-0"><i class="fa-solid fa-clock"></i> Останні дії</h4>
+                        <a href="/admin/clear-log/" class="btn btn-danger clear-log">Очистити журнал дій</a>
+                    </div>
+                    <ul class="list-group list-group-flush" id="recent-actions">
+                        <li class="list-group-item">Дія: Додано статтю</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sinon.js/14.0.1/sinon.min.js"></script>
+<script src="https://code.jquery.com/qunit/qunit-2.19.4.js"></script>
+<script src="../admin_custom.js"></script> <!-- підключення твого основного js -->
+<script src="admin_index_test.js"></script> <!-- файл тестів -->
+</body>
+</html>

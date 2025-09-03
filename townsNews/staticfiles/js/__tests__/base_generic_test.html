@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Портал Новин Міста Київ</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.19.1.css">
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture">
+    <!-- Додаємо фіксовані елементи для тестування -->
+    <div class="notify_user">
+        <div class="alert alert-info">Тестове повідомлення</div>
+    </div>
+
+    <div class="head-of-page">
+        <div class="container-base">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="head-content">
+                        <h2 class="kyiv-lux">КИЇВ ЛЮКС</h2>
+                        <div class="variant-block">
+                            <a href="/">Головна сторінка</a>
+                            <a href="/article-list/">Всі новини</a>
+                            <button id="menuBtn" class="btn-menu">Меню ▼</button>
+                        </div>
+                        <div class="head-user-info">
+                            <span id="username">Користувач: <strong>test_user</strong></span>
+                            <button id="logBtn" class="btn btn-custom">Logout</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="sidebar" class="nav nav-pills nav-stacked sidebar">
+        <a href="/saved-articles/">Збережені новини</a>
+        <a href="/edit-site-settings/">Налаштування сторінки</a>
+        <a href="/user-management/">Управління користувачами</a>
+        <a href="/article-statistics/">Рейтинг статей</a>
+        <a href="/admin/">Адмін панель</a>
+    </div>
+
+    <footer>
+        <ul>
+            <li><a href="/how-listen/">Як слухати</a></li>
+            <li><a href="/about-us/">Про нас</a></li>
+            <li><a href="/legal-aspects/">Правові аспекти</a></li>
+            <li><a href="/feedback/">Зворотний зв'язок</a></li>
+            <li><a href="https://workspace.google.com/intl/uk/gmail/">Поштова розсилка</a></li>
+            <li><a href="https://jobs.dou.ua/vacancies/?category=Python">Вакансії</a></li>
+        </ul>
+    </footer>
+</div>
+
+<script src="https://code.jquery.com/qunit/qunit-2.19.1.js"></script>
+<script src="../../js/base_generic.js"></script>
+<script src="base_generic_test.js"></script>
+</body>
+</html>
