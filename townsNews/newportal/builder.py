@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import random
 from newportal.observer import NewsBlockSubject, Observer
 
+
 # BUILDER
 class NewsBlockBuilder(ABC):
     def __init__(self, request=None):
@@ -81,6 +82,3 @@ class SixArticlesBlockBuilder(NewsBlockBuilder):
 
     def _select_articles(self, articles, n):
         return random.sample(articles, min(len(articles), n))
-
-
-

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Тести для change_form.html</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.19.4.css">
+</head>
+<body>
+
+<div id="qunit"></div>
+<div id="qunit-fixture">
+    <!-- Вставте вміст change_form.html тут -->
+    {% include 'admin/newportal/selectedfacade/change_form.html' %}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://code.jquery.com/qunit/qunit-2.19.4.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sinon.js/15.2.0/sinon.min.js"></script>
+<script src="../../js/change_form.js"></script>
+<script src="../admin_custom.js"></script> <!-- підключення твого основного js -->
+<script src="admin_change_form_test.js"></script> <!-- файл тестів -->
+</body>
+</html>

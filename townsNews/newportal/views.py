@@ -450,23 +450,23 @@ def article_statistics(request):
     sort = request.GET.get('sort', 'views')
 
     ordering = {
-        'views':    '-views_count',
+        'views': '-views_count',
         'comments': '-num_comments',
-        'saves':    '-num_saves',
+        'saves': '-num_saves',
     }
     order = ordering.get(sort, '-views_count')
 
     articles = (
         Article.objects
-        .annotate(
+            .annotate(
             num_comments=Count('comments'),
             num_saves=Count('savedarticle')
         )
-        .order_by(order)
+            .order_by(order)
     )
 
     return render(request, 'catalog/article_statistics.html', {
-        'articles':     articles,
+        'articles': articles,
         'current_sort': sort,
     })
 
